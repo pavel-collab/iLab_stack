@@ -5,16 +5,16 @@
 
 int stack_construct(stack* stk, int capacity) {
 
-    //* temprorary solution
+    //! temprorary solution
     if ((stk != NULL) && ((stk->buf) != NULL)) {
 
-        //! checking stack validity
+        //* checking stack validity
         verification(stk);
 
         printf("this stack was already construct\n");
         stack_dump(stk);
 
-        //! checking stack validity
+        //* checking stack validity
         verification(stk);
 
         return 0;
@@ -23,7 +23,7 @@ int stack_construct(stack* stk, int capacity) {
 
     stk->buf = (int*) calloc(capacity, sizeof(int));
 
-    //! checking stack validity
+    //* checking stack validity
     verification(stk);
 
     stk->size = 0;
@@ -33,7 +33,7 @@ int stack_construct(stack* stk, int capacity) {
         stk->buf[i] = POISON;
     }
 
-    //! checking stack validity
+    //* checking stack validity
     verification(stk);
 
     return 0;
@@ -44,7 +44,7 @@ int stack_construct(stack* stk, int capacity) {
 
 int stack_distruct(stack* stk) {
 
-    //! checking stack validity
+    //* checking stack validity
     verification(stk);
 
     free(stk->buf);
@@ -60,9 +60,34 @@ int stack_distruct(stack* stk) {
 
 //--------------------------------------------------------------------------------------------
 
+int stack_realloc_up(stack* stk) {
+
+    //* checking stack validity
+    verification(stk);
+
+    realloc(stk->buf, ((stk->capacity) * 2) * sizeof(int));
+
+    //* checking stack validity
+    verification(stk);
+
+    stk->capacity = ((stk->capacity)*2);
+
+    //* fill expanded memory with POISON value
+    for (int i = stk->size; i < stk->capacity; i++) {
+        stk->buf[i] = POISON;
+    }
+
+    //* checking stack validity
+    verification(stk);
+
+    return 0;
+}
+
+//--------------------------------------------------------------------------------------------
+
 int stack_push(stack* stk, int element) {
 
-    //! checking stack validity
+    //* checking stack validity
     verification(stk);
 
     if (stk->size < stk->capacity) {
@@ -71,17 +96,8 @@ int stack_push(stack* stk, int element) {
         stk->size++;
     }
     else {
-        realloc(stk->buf, ((stk->capacity) * 2) * sizeof(int));
 
-        //! checking stack validity
-        verification(stk);
-
-        stk->capacity = ((stk->capacity)*2);
-
-        //! fill expanded memory with POISON value
-        for (int i = stk->size; i < stk->capacity; i++) {
-            stk->buf[i] = POISON;
-        }
+        stack_realloc_up(stk);
 
         stk->buf[stk->size] = element;
         stk->size++;
@@ -89,7 +105,7 @@ int stack_push(stack* stk, int element) {
 
     //??? реаллок сам возвращает указатель на новое место в памяти, зачем мне его перезаписывать вручную?
 
-    //! checking stack validity
+    //* checking stack validity
     verification(stk);
 
     return 0;
@@ -100,7 +116,7 @@ int stack_push(stack* stk, int element) {
 
 int stack_pop(stack* stk) {
 
-    //! checking stack validity
+    //* checking stack validity
         verification(stk);
 
     if (stk->size != 0) {
@@ -116,7 +132,7 @@ int stack_pop(stack* stk) {
         return POISON;
     }
 
-    //! checking stack validity
+    //* checking stack validity
     verification(stk);
 
 }
@@ -127,7 +143,7 @@ int stack_dump(stack* stk) {
 
     printf("START OF PRINTOUT\n\n");
 
-    //! checking stack validity
+    //* checking stack validity
     verification(stk);
 
     printf("simple_stack (OK) [%x]\n", stk);
@@ -195,7 +211,7 @@ int verification(stack* stk) {
             exit(EMPTY_CELL_NOT_POISOEND);
             break;
         default:
-            printf("NO ERRORS!!!\n");
+            printf("NO ERRORS!!!\n\n");
     }
 
     return 0;
