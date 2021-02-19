@@ -5,6 +5,22 @@
 
 int stack_construct(stack* stk, int capacity) {
 
+    //* temprorary solution
+    if ((stk != NULL) && ((stk->buf) != NULL)) {
+
+        //! checking stack validity
+        verification(stk);
+
+        printf("this stack was already construct\n");
+        stack_dump(stk);
+
+        //! checking stack validity
+        verification(stk);
+
+        return 0;
+        
+    }
+
     stk->buf = (int*) calloc(capacity, sizeof(int));
 
     //! checking stack validity
@@ -155,6 +171,8 @@ int stack_control(stack* stk) {
     }
 
 }
+
+//--------------------------------------------------------------------------------------------
 
 //verification
 int verification(stack* stk) {
