@@ -30,13 +30,13 @@ int main() {
     }
 
     int last = stack_pop(&simple_stack);
+    /*last = stack_pop(&simple_stack);
     last = stack_pop(&simple_stack);
     last = stack_pop(&simple_stack);
     last = stack_pop(&simple_stack);
     last = stack_pop(&simple_stack);
     last = stack_pop(&simple_stack);
-    last = stack_pop(&simple_stack);
-    last = stack_pop(&simple_stack);
+    last = stack_pop(&simple_stack);*/
 
     printf("last element in stack is %d\n", last);
 

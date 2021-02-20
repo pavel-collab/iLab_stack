@@ -155,7 +155,7 @@ int stack_push(stack* stk, int element) {
 int stack_pop(stack* stk) {
 
     //* checking stack validity
-        verification(stk);
+    verification(stk);
 
     if (stk->size == 0) {
         printf("ERROR, STECK IS EMPTY\n");
@@ -202,6 +202,9 @@ int stack_dump(stack* stk) {
     printf("\t}\n");
     printf("}\n");
     printf("END OF PRINTOUT\n");
+
+    //* checking stack validity
+    verification(stk);
 
     return 0;
 
