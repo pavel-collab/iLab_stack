@@ -95,11 +95,33 @@ int stack_realloc_up(stack* stk) {
 
 //--------------------------------------------------------------------------------------------
 
-/*int stack_realloc_down(stack* stk) {
+int stack_realloc_down(stack* stk) {
 
+    //* checking stack validity
+    verification(stk);
 
+    void* local_arrow = realloc(stk->buf, ((stk->capacity) / 2) * sizeof(int));
 
-}*/
+    //? if the local return NULL, there is fail --> abort the program
+    if (local_arrow == NULL) {
+        printf("REALLOCATION FAILED!\n\n");
+        return 0;
+    }
+    else {
+        stk->buf = (int*) local_arrow;
+    }
+
+    //* checking stack validity
+    verification(stk);
+
+    stk->capacity = ((stk->capacity)/2);
+
+    //* checking stack validity
+    verification(stk);
+
+    return 0;
+
+}
 
 //--------------------------------------------------------------------------------------------
 
@@ -135,21 +157,22 @@ int stack_pop(stack* stk) {
     //* checking stack validity
         verification(stk);
 
-    if (stk->size != 0) {
-
-        int box = stk->buf[--stk->size];
-
-        stk->buf[stk->size] = POISON;
-
-        return box;
-    }
-    else {
+    if (stk->size == 0) {
         printf("ERROR, STECK IS EMPTY\n");
         return POISON;
     }
 
+    int box = stk->buf[--stk->size];
+    stk->buf[stk->size] = POISON;
+
+
+    if (stk->capacity >= (stk->size)*4)
+        stack_realloc_down(stk);
+
     //* checking stack validity
     verification(stk);
+
+    return box;
 
 }
 

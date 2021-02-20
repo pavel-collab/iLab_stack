@@ -41,7 +41,7 @@ int stack_push(stack* stk, int element);
 
 int stack_realloc_up(stack* stk);
 
-//int stack_realloc_down(stack* stk);
+int stack_realloc_down(stack* stk);
 
 int stack_pop(stack* stk);
 
