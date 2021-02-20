@@ -1,7 +1,7 @@
 #ifndef _STACK_H_
 #define _STACK_H_
 
-#define POISON -2147483648
+static int POISON = -2147483648;
 
 // stucture declaration
 typedef struct _stack {
@@ -40,6 +40,8 @@ int stack_distruct(stack* stk);
 int stack_push(stack* stk, int element);
 
 int stack_realloc_up(stack* stk);
+
+//int stack_realloc_down(stack* stk);
 
 int stack_pop(stack* stk);
 

@@ -65,7 +65,17 @@ int stack_realloc_up(stack* stk) {
     //* checking stack validity
     verification(stk);
 
-    realloc(stk->buf, ((stk->capacity) * 2) * sizeof(int));
+    //? create local variabe
+    void* local_arrow = realloc(stk->buf, ((stk->capacity) * 2) * sizeof(int));
+
+    //? if the local return NULL, there is fail --> abort the program
+    if (local_arrow == NULL) {
+        printf("REALLOCATION FAILED!\n\n");
+        return 0;
+    }
+    else {
+        stk->buf = (int*) local_arrow;
+    }
 
     //* checking stack validity
     verification(stk);
@@ -82,6 +92,14 @@ int stack_realloc_up(stack* stk) {
 
     return 0;
 }
+
+//--------------------------------------------------------------------------------------------
+
+/*int stack_realloc_down(stack* stk) {
+
+
+
+}*/
 
 //--------------------------------------------------------------------------------------------
 
@@ -102,8 +120,6 @@ int stack_push(stack* stk, int element) {
         stk->buf[stk->size] = element;
         stk->size++;
     }
-
-    //??? реаллок сам возвращает указатель на новое место в памяти, зачем мне его перезаписывать вручную?
 
     //* checking stack validity
     verification(stk);
