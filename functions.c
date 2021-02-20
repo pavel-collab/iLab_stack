@@ -228,6 +228,12 @@ int stack_control(stack* stk) {
             return 4; 
     }
 
+    for (int j = 0; j < stk->size; j++) {
+        if (stk->buf[j] == POISON) {
+            return 5;
+        }
+    }
+
 }
 
 //--------------------------------------------------------------------------------------------
@@ -251,6 +257,10 @@ int verification(stack* stk) {
         case 4:
             printf(ErrorNames[EMPTY_CELL_NOT_POISOEND-1]);
             exit(EMPTY_CELL_NOT_POISOEND);
+            break;
+        case 5:
+            printf(ErrorNames[POISONED_CELL-1]);
+            exit(POISONED_CELL);
             break;
         default:
             printf("NO ERRORS!!!\n\n");

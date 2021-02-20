@@ -6,7 +6,6 @@
 // chancge "loud" vereficator
 // solve problem with EOF in vs code 
 // download TXlib
-// slack_dump(stack* stk, const char* message);
 
 #include "stack.h"
 #include <stdio.h>
@@ -24,19 +23,12 @@ int main() {
 
     //! режим тестирования
     printf("test mode\n"
-            "input data:\n");
+           "input data:\n");
     while (scanf("%d", &element) == 1) {
         stack_push(&simple_stack, element);
     }
 
     int last = stack_pop(&simple_stack);
-    /*last = stack_pop(&simple_stack);
-    last = stack_pop(&simple_stack);
-    last = stack_pop(&simple_stack);
-    last = stack_pop(&simple_stack);
-    last = stack_pop(&simple_stack);
-    last = stack_pop(&simple_stack);
-    last = stack_pop(&simple_stack);*/
 
     printf("last element in stack is %d\n", last);
 
