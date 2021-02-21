@@ -15,9 +15,12 @@
 
 int main() {
 
+    FILE* log_txt = fopen("log.txt", "wb");
+    assert(log_txt != NULL);
+
     stack simple_stack = {NULL, 0, 0};
 
-    stack_construct (&simple_stack, 5);
+    stack_construct (&simple_stack, 5, log_txt);
 
     int element = 0;
 
@@ -32,9 +35,11 @@ int main() {
 
     printf("last element in stack is %d\n", last);
 
-    stack_dump(&simple_stack);
+    stack_dump(&simple_stack, log_txt);
 
     stack_distruct(&simple_stack);
+
+    fclose(log_txt);
 
     return 0;
 }

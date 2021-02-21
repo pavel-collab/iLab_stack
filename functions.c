@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 
-int stack_construct(stack* stk, int capacity) {
+int stack_construct(stack* stk, int capacity, FILE* log_txt) {
 
     //! temprorary solution
     if ((stk != NULL) && ((stk->buf) != NULL)) {
@@ -12,7 +12,7 @@ int stack_construct(stack* stk, int capacity) {
         verification(stk);
 
         printf("this stack was already construct\n");
-        stack_dump(stk);
+        stack_dump(stk, log_txt);
 
         //* checking stack validity
         verification(stk);
@@ -178,30 +178,30 @@ int stack_pop(stack* stk) {
 
 //--------------------------------------------------------------------------------------------
 
-int stack_dump(stack* stk) {
+int stack_dump(stack* stk, FILE* log_txt) {
 
-    printf("START OF PRINTOUT\n\n");
+    fprintf(log_txt, "START OF PRINTOUT\n\n");
 
     //* checking stack validity
     verification(stk);
 
-    printf("simple_stack (OK) [%x]\n", stk);
-    printf("{\n");
-    printf("size = %d\n", stk->size);
-    printf("capacity = %d\n", stk->capacity);
-    printf("buf [%x]\n", stk->buf);
-    printf("\t{\n");
+    fprintf(log_txt, "simple_stack (OK) [%x]\n", stk);
+    fprintf(log_txt, "{\n");
+    fprintf(log_txt, "size = %d\n", stk->size);
+    fprintf(log_txt, "capacity = %d\n", stk->capacity);
+    fprintf(log_txt, "buf [%x]\n", stk->buf);
+    fprintf(log_txt, "\t{\n");
     for (int i = 0; i < stk->capacity; i++) {
         if (i <= stk->size - 1) {
-            printf("\t* [%d] : %d\n", i, stk->buf[i]);
+            fprintf(log_txt, "\t* [%d] : %d\n", i, stk->buf[i]);
         }
         else {
-            printf("\t  [%d] : %d ~~ POISON\n", i, stk->buf[i]);
+            fprintf(log_txt, "\t  [%d] : %d ~~ POISON\n", i, stk->buf[i]);
         }
     }
-    printf("\t}\n");
-    printf("}\n");
-    printf("END OF PRINTOUT\n");
+    fprintf(log_txt, "\t}\n");
+    fprintf(log_txt, "}\n");
+    fprintf(log_txt, "END OF PRINTOUT\n");
 
     //* checking stack validity
     verification(stk);
@@ -228,12 +228,6 @@ int stack_control(stack* stk) {
             return 4; 
     }
 
-    for (int j = 0; j < stk->size; j++) {
-        if (stk->buf[j] == POISON) {
-            return 5;
-        }
-    }
-
 }
 
 //--------------------------------------------------------------------------------------------
@@ -257,10 +251,6 @@ int verification(stack* stk) {
         case 4:
             printf(ErrorNames[EMPTY_CELL_NOT_POISOEND-1]);
             exit(EMPTY_CELL_NOT_POISOEND);
-            break;
-        case 5:
-            printf(ErrorNames[POISONED_CELL-1]);
-            exit(POISONED_CELL);
             break;
         default:
             printf("NO ERRORS!!!\n\n");
