@@ -2,13 +2,13 @@ START OF PRINTOUT
 
 simple_stack (OK) [64fe00]
 {
-size = 3
+size = 2
 capacity = 5
-buf [ac14a0]
+buf [9e14a0]
 	{
 	* [0] : 1
 	* [1] : 2
-	* [2] : 3
+	  [2] : -2147483648 ~~ POISON
 	  [3] : -2147483648 ~~ POISON
 	  [4] : -2147483648 ~~ POISON
 	}

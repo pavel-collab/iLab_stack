@@ -24,7 +24,16 @@ int stack_construct(stack* stk, int capacity, FILE* log_txt) {
     stk->buf = (int*) calloc(capacity, sizeof(int));
 
     //* checking stack validity
-    verification(stk);
+    /*params 'size' and 'capacity' was not declared still
+      so, program checking just 'stk' and 'stk->buf' at this place*/
+    if (stk == NULL) {
+        printf(ErrorNames[STK_IS_NULL-1]);
+        exit(STK_IS_NULL);
+    }
+    else if (stk->buf == NULL) {
+        printf(ErrorNames[BUF_IS_NULL-1]);
+        exit(BUF_IS_NULL);
+    }
 
     stk->size = 0;
     stk->capacity = capacity;
