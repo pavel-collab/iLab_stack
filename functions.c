@@ -195,7 +195,10 @@ int stack_dump(stack* stk, FILE* log_txt) {
     verification(stk);
 
     fprintf(log_txt, "simple_stack (OK) [%x]\n", stk);
-    fprintf(log_txt, "{\n");
+    fprintf(log_txt, "{\n\n");
+
+    fprintf(log_txt, "LEFT CANARY (%X)\n\n", stk->left_canary);
+
     fprintf(log_txt, "size = %d\n", stk->size);
     fprintf(log_txt, "capacity = %d\n", stk->capacity);
     fprintf(log_txt, "buf [%x]\n", stk->buf);
@@ -208,7 +211,10 @@ int stack_dump(stack* stk, FILE* log_txt) {
             fprintf(log_txt, "\t  [%d] : %d ~~ POISON\n", i, stk->buf[i]);
         }
     }
-    fprintf(log_txt, "\t}\n");
+    fprintf(log_txt, "\t}\n\n");
+
+    fprintf(log_txt, "RIGHT CANARY (%X)\n\n", stk->right_canary);
+
     fprintf(log_txt, "}\n");
     fprintf(log_txt, "END OF PRINTOUT\n");
 
@@ -223,6 +229,9 @@ int stack_dump(stack* stk, FILE* log_txt) {
 
 int stack_control(stack* stk) {
 
+    if (stk->left_canary != left_canary) 
+        return 5;
+
     if (stk == NULL)
         return 1;
 
@@ -236,6 +245,9 @@ int stack_control(stack* stk) {
         if (stk->buf[i] != POISON)
             return 4; 
     }
+
+    if (stk->right_canary != right_canary)
+        return 6;
 
 }
 
@@ -261,6 +273,12 @@ int verification(stack* stk) {
             printf(ErrorNames[EMPTY_CELL_NOT_POISOEND-1]);
             exit(EMPTY_CELL_NOT_POISOEND);
             break;
+        case 5:
+            printf(ErrorNames[FAIL_LEFT_CANARY-1]);
+            exit(FAIL_LEFT_CANARY);
+        case 6:
+            printf(ErrorNames[FAIL_RIGHT_CANARY-1]);
+            exit(FAIL_RIGHT_CANARY);
         default:
             printf("NO ERRORS!!!\n\n");
     }

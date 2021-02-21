@@ -18,7 +18,7 @@ int main() {
     FILE* log_txt = fopen("log.txt", "wb");
     assert(log_txt != NULL);
 
-    stack simple_stack = {NULL, 0, 0};
+    stack simple_stack = {left_canary, NULL, 0, 0, right_canary};
 
     stack_construct (&simple_stack, 5, log_txt);
 

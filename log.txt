@@ -1,16 +1,22 @@
 START OF PRINTOUT
 
-simple_stack (OK) [64fe00]
+simple_stack (OK) [64fdf0]
 {
-size = 2
+
+LEFT CANARY (DEADBEEF)
+
+size = 0
 capacity = 5
-buf [9e14a0]
+buf [7514a0]
 	{
-	* [0] : 1
-	* [1] : 2
+	  [0] : -2147483648 ~~ POISON
+	  [1] : -2147483648 ~~ POISON
 	  [2] : -2147483648 ~~ POISON
 	  [3] : -2147483648 ~~ POISON
 	  [4] : -2147483648 ~~ POISON
 	}
+
+RIGHT CANARY (BADDCAFE)
+
 }
 END OF PRINTOUT
