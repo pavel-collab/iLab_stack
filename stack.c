@@ -1,45 +1,289 @@
-//ГОВНОКОДГОВНОКОДГОВНОКОД
-//ГОВНОКОДГОВНОКОДГОВНОКОД
-//ГОВНОКОДГОВНОКОДГОВНОКОД
-
-// TODO:
-// chancge "loud" vereficator
-// solve problem with EOF in vs code 
-// download TXlib
-
 #include "stack.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 
 
-int main() {
+int stack_construct(stack* stk, int capacity, FILE* log_txt) {
 
-    FILE* log_txt = fopen("log.txt", "wb");
-    assert(log_txt != NULL);
+    //! temprorary solution
+    if ((stk != NULL) && ((stk->buf) != NULL)) {
 
-    stack simple_stack = {left_canary, NULL, 0, 0, right_canary};
+        //* checking stack validity
+        verification(stk);
 
-    stack_construct (&simple_stack, 5, log_txt);
+        printf("this stack was already construct\n");
+        stack_dump(stk, log_txt);
 
-    int element = 0;
+        //* checking stack validity
+        verification(stk);
 
-    //! режим тестирования
-    printf("test mode\n"
-           "input data:\n");
-    while (scanf("%d", &element) == 1) {
-        stack_push(&simple_stack, element);
+        return 0;
+        
     }
 
-    int last = stack_pop(&simple_stack);
+    stk->buf = (int*) calloc(capacity, sizeof(int));
 
-    printf("last element in stack is %d\n", last);
+    //* checking stack validity
+    /*params 'size' and 'capacity' was not declared still
+      so, program checking just 'stk' and 'stk->buf' at this place*/
+    if (stk == NULL) {
+        printf(ErrorNames[STK_IS_NULL-1]);
+        exit(STK_IS_NULL);
+    }
+    else if (stk->buf == NULL) {
+        printf(ErrorNames[BUF_IS_NULL-1]);
+        exit(BUF_IS_NULL);
+    }
 
-    stack_dump(&simple_stack, log_txt);
+    stk->size = 0;
+    stk->capacity = capacity;
 
-    stack_distruct(&simple_stack);
+    for (int i = 0; i < capacity; i++) {
+        stk->buf[i] = POISON;
+    }
 
-    fclose(log_txt);
+    //* checking stack validity
+    verification(stk);
+
+    return 0;
+
+}
+
+//--------------------------------------------------------------------------------------------
+
+int stack_distruct(stack* stk) {
+
+    //* checking stack validity
+    verification(stk);
+
+    free(stk->buf);
+    stk->buf = NULL;
+
+    stk = NULL;
+
+    printf("SUCCESSFUL STACK REMOVAL\n");
+
+    return 0;
+
+}
+
+//--------------------------------------------------------------------------------------------
+
+int stack_realloc_up(stack* stk) {
+
+    //* checking stack validity
+    verification(stk);
+
+    //? create local variabe
+    void* local_arrow = realloc(stk->buf, ((stk->capacity) * 2) * sizeof(int));
+
+    //? if the local return NULL, there is fail --> abort the program
+    if (local_arrow == NULL) {
+        printf("REALLOCATION FAILED!\n\n");
+        return 0;
+    }
+    else {
+        stk->buf = (int*) local_arrow;
+    }
+
+    //* checking stack validity
+    verification(stk);
+
+    stk->capacity = ((stk->capacity)*2);
+
+    //* fill expanded memory with POISON value
+    for (int i = stk->size; i < stk->capacity; i++) {
+        stk->buf[i] = POISON;
+    }
+
+    //* checking stack validity
+    verification(stk);
 
     return 0;
 }
+
+//--------------------------------------------------------------------------------------------
+
+int stack_realloc_down(stack* stk) {
+
+    //* checking stack validity
+    verification(stk);
+
+    void* local_arrow = realloc(stk->buf, ((stk->capacity) / 2) * sizeof(int));
+
+    //? if the local return NULL, there is fail --> abort the program
+    if (local_arrow == NULL) {
+        printf("REALLOCATION FAILED!\n\n");
+        return 0;
+    }
+    else {
+        stk->buf = (int*) local_arrow;
+    }
+
+    //* checking stack validity
+    verification(stk);
+
+    stk->capacity = ((stk->capacity)/2);
+
+    //* checking stack validity
+    verification(stk);
+
+    return 0;
+
+}
+
+//--------------------------------------------------------------------------------------------
+
+int stack_push(stack* stk, int element) {
+
+    //* checking stack validity
+    verification(stk);
+
+    if (stk->size < stk->capacity) {
+
+        stk->buf[stk->size] = element;
+        stk->size++;
+    }
+    else {
+
+        stack_realloc_up(stk);
+
+        stk->buf[stk->size] = element;
+        stk->size++;
+    }
+
+    //* checking stack validity
+    verification(stk);
+
+    return 0;
+
+}
+
+//--------------------------------------------------------------------------------------------
+
+int stack_pop(stack* stk) {
+
+    //* checking stack validity
+    verification(stk);
+
+    if (stk->size == 0) {
+        printf("ERROR, STECK IS EMPTY\n");
+        return POISON;
+    }
+
+    int box = stk->buf[--stk->size];
+    stk->buf[stk->size] = POISON;
+
+
+    if (stk->capacity >= (stk->size)*4)
+        stack_realloc_down(stk);
+
+    //* checking stack validity
+    verification(stk);
+
+    return box;
+
+}
+
+//--------------------------------------------------------------------------------------------
+
+int stack_dump(stack* stk, FILE* log_txt) {
+
+    fprintf(log_txt, "START OF PRINTOUT\n\n");
+
+    //* checking stack validity
+    verification(stk);
+
+    fprintf(log_txt, "simple_stack (OK) [%x]\n", stk);
+    fprintf(log_txt, "{\n\n");
+
+    fprintf(log_txt, "LEFT CANARY (%X)\n\n", stk->left_canary);
+
+    fprintf(log_txt, "size = %d\n", stk->size);
+    fprintf(log_txt, "capacity = %d\n", stk->capacity);
+    fprintf(log_txt, "buf [%x]\n", stk->buf);
+    fprintf(log_txt, "\t{\n");
+    for (int i = 0; i < stk->capacity; i++) {
+        if (i <= stk->size - 1) {
+            fprintf(log_txt, "\t* [%d] : %d\n", i, stk->buf[i]);
+        }
+        else {
+            fprintf(log_txt, "\t  [%d] : %d ~~ POISON\n", i, stk->buf[i]);
+        }
+    }
+    fprintf(log_txt, "\t}\n\n");
+
+    fprintf(log_txt, "RIGHT CANARY (%X)\n\n", stk->right_canary);
+
+    fprintf(log_txt, "}\n");
+    fprintf(log_txt, "END OF PRINTOUT\n");
+
+    //* checking stack validity
+    verification(stk);
+
+    return 0;
+
+}
+
+//--------------------------------------------------------------------------------------------
+
+int stack_control(stack* stk) {
+
+    if (stk->left_canary != left_canary) 
+        return 5;
+
+    if (stk == NULL)
+        return 1;
+
+    if (stk->buf == NULL)
+        return 2;
+
+    if (stk->size > stk->capacity)
+        return 3;
+
+    for (int i = stk->size; i < stk->capacity; i++) {
+        if (stk->buf[i] != POISON)
+            return 4; 
+    }
+
+    if (stk->right_canary != right_canary)
+        return 6;
+
+}
+
+//--------------------------------------------------------------------------------------------
+
+//verification
+int verification(stack* stk) {
+
+    switch (stack_control(stk)) {
+        case 1:
+            printf(ErrorNames[STK_IS_NULL-1]);
+            exit(STK_IS_NULL);
+            break;
+        case 2:
+            printf(ErrorNames[BUF_IS_NULL-1]);
+            exit(BUF_IS_NULL);
+            break;
+        case 3:
+            printf(ErrorNames[OUT_OF_CAPACITY-1]);
+            exit(OUT_OF_CAPACITY);
+            break;
+        case 4:
+            printf(ErrorNames[EMPTY_CELL_NOT_POISOEND-1]);
+            exit(EMPTY_CELL_NOT_POISOEND);
+            break;
+        case 5:
+            printf(ErrorNames[FAIL_LEFT_CANARY-1]);
+            exit(FAIL_LEFT_CANARY);
+        case 6:
+            printf(ErrorNames[FAIL_RIGHT_CANARY-1]);
+            exit(FAIL_RIGHT_CANARY);
+        default:
+            printf("NO ERRORS!!!\n\n");
+    }
+
+    return 0;
+
+}
+
