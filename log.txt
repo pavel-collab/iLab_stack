@@ -65,3 +65,29 @@ RIGHT CANARY (BADDCAFE)
 END OF PRINTOUT
 ##################################################
 
+##################################################
+
+START OF PRINTOUT
+
+simple_stack (OK) [64fdf0]
+{
+
+LEFT CANARY (DEADBEEF)
+
+size = 4
+capacity = 5
+buf [af1440]
+	{
+	* [0] : 1
+	* [1] : 2
+	* [2] : 3
+	* [3] : 4
+	  [4] : -2147483648 ~~ POISON
+	}
+
+RIGHT CANARY (BADDCAFE)
+
+}
+END OF PRINTOUT
+##################################################
+
