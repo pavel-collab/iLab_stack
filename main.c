@@ -18,10 +18,10 @@ int main() {
     stack_construct (&stk, 5, log_txt);
 
     int select_act = 0;
-    int element = 0;
+    int push = 0;
     int pop = 0;
 
-    START_WORK;
+    START_WORK(stk, select_act, push, pop, log_txt);
 
     stack_distruct(&stk);
 
