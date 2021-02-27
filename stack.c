@@ -323,9 +323,12 @@ void stack_work (stack* stk, int select_act, int element, int pop) {
 
         switch (select_act) { 
             case 0: 
+            {
                 printf("completion of working.\n"); 
-                return; 
+                return;
+            } 
             case 1: 
+            {
                 printf("input the element to stack_push: "); 
                 scanf("%d", &element); 
     
@@ -337,7 +340,9 @@ void stack_work (stack* stk, int select_act, int element, int pop) {
                     printf("Error with push.\n"); 
                     break; 
                 } 
+            }
             case 2: 
+            {
                 pop = stack_pop(stk); 
                 if (pop != POISON) { 
                     printf("output element = %d\n", pop); 
@@ -347,12 +352,17 @@ void stack_work (stack* stk, int select_act, int element, int pop) {
                     printf("Error with pop.\n"); 
                     break; 
                 } 
+            }
             case 3: 
+            {
                 DUMP(stk);
                 break;
-            case 4: 
+            }
+            case 4:
+            { 
                 verification(stk); 
-                break; 
+                break;
+            } 
             default: 
                 printf("Error, no number to action, try again.\n"); 
             } 
