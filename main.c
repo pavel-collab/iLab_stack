@@ -2,11 +2,6 @@
 //ГОВНОКОДГОВНОКОДГОВНОКОД
 //ГОВНОКОДГОВНОКОДГОВНОКОД
 
-// TODO:
-// chancge "loud" vereficator
-// solve problem with EOF in vs code 
-// download TXlib
-
 #include "stack.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,29 +10,20 @@
 
 int main() {
 
-    FILE* log_txt = fopen("log.txt", "wb");
+    FILE* log_txt = fopen("log.txt", "ab");
     assert(log_txt != NULL);
 
-    stack simple_stack = {left_canary, NULL, 0, 0, right_canary};
+    stack stk = {left_canary, NULL, 0, 0, right_canary};
 
-    stack_construct (&simple_stack, 5, log_txt);
+    stack_construct (&stk, 5, log_txt);
 
+    int select_act = 0;
     int element = 0;
+    int pop = 0;
 
-    //! режим тестирования
-    printf("test mode\n"
-           "input data:\n");
-    while (scanf("%d", &element) == 1) {
-        stack_push(&simple_stack, element);
-    }
+    START_WORK;
 
-    int last = stack_pop(&simple_stack);
-
-    printf("last element in stack is %d\n", last);
-
-    stack_dump(&simple_stack, log_txt);
-
-    stack_distruct(&simple_stack);
+    stack_distruct(&stk);
 
     fclose(log_txt);
 

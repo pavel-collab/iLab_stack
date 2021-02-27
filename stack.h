@@ -1,7 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #ifndef _STACK_H_
 #define _STACK_H_
+
+#define DEBUG_MODE
+#define STACK_MODE
 
 static const int POISON = -2147483648;
 
@@ -26,7 +30,7 @@ static char *ErrorNames[] = {
     "pointer \'stk\' is NULL\n",
 
     "ERROR 2\n"
-    "pointer \'buf\' is NULL\n",
+    "pointer \'buf\' is nullptr\n",
 
     "ERROR 3\n"
     "size > capacity\n",
@@ -68,4 +72,73 @@ int verification(stack* stk);
 
 int stack_control(stack* stk);
 
+
+#ifdef DEBUG_MODE
+
+#define STACK_OK \
+    verification(stk); \
+
+#else
+
+    #define STACK_OK
+
+#endif
+
+#ifdef STACK_MODE
+    #define START_WORK \
+        printf("Enter number to select an action.\n\n"); \
+        printf("0 - Exit.\n\n"); \
+        printf("1 - Push, put the element to the stack.\n\n"); \
+        printf("2 - Pop, take the element from the stack.\n\n"); \
+        printf("3 - Dump, get information about stack condition.\n\n"); \
+        printf("4 - Verification, immediate stack checking\n\n"); \
+        while (1) { \
+            printf("put number to select an action: "); \
+            scanf("%d", &select_act); \
+            switch (select_act) { \
+                case 0: \
+                    printf("completion of working.\n"); \
+                    return 0; \
+                case 1: \
+                    printf("input the element to stack_push: "); \
+                    scanf("%d", &element); \
+                    \
+                    if (stack_push(&stk, element) == 0) { \
+                        printf("push compleated successful.\n"); \
+                        break; \
+                    } \
+                    else { \
+                        printf("Error with push.\n"); \
+                        break; \
+                    } \
+                case 2: \
+                    pop = stack_pop(&stk); \
+                    if (pop != POISON) { \
+                        printf("output element = %d", pop); \
+                        break; \
+                    } \
+                    else { \
+                        printf("Error with pop.\n"); \
+                        break; \
+                    } \
+                case 3: \
+                    if (stack_dump(&stk, log_txt) == 0) { \
+                        printf("dump compleated successful; look throught log.txt\n"); \
+                        break; \
+                    } \
+                    else { \
+                        printf("Error with dump\n"); \
+                        break; \
+                    } \
+                case 4: \
+                    verification(&stk); \
+                    break; \
+                default: \
+                    printf("Error, no number to action, try again.\n"); \
+            } \
+        }
+#else
+#endif
+// TODO 
+// 
 #endif /* _STACK_H_ */

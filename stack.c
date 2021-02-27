@@ -21,7 +21,15 @@ int stack_construct(stack* stk, int capacity, FILE* log_txt) {
         
     }
 
-    stk->buf = (int*) calloc(capacity, sizeof(int));
+    //! если вдруг пользователь захочет создать пустой стек емкостью 0
+    if (capacity == 0) {
+        stk->buf = NULL;
+        stk->size = 0;
+        stk->capacity = 0;
+        return 0;
+    }
+    else
+        stk->buf = (int*) calloc(capacity, sizeof(int));
 
     //* checking stack validity
     /*params 'size' and 'capacity' was not declared still
@@ -53,8 +61,14 @@ int stack_construct(stack* stk, int capacity, FILE* log_txt) {
 
 int stack_distruct(stack* stk) {
 
+    //if stack was already distructed
+    if (stk == NULL) {
+        printf("This stack was already distructed.\n");
+        return 0;
+    }
+
     //* checking stack validity
-    verification(stk);
+    STACK_OK (stk);
 
     free(stk->buf);
     stk->buf = NULL;
@@ -72,7 +86,7 @@ int stack_distruct(stack* stk) {
 int stack_realloc_up(stack* stk) {
 
     //* checking stack validity
-    verification(stk);
+    STACK_OK (stk);
 
     //? create local variabe
     void* local_arrow = realloc(stk->buf, ((stk->capacity) * 2) * sizeof(int));
@@ -87,7 +101,7 @@ int stack_realloc_up(stack* stk) {
     }
 
     //* checking stack validity
-    verification(stk);
+    STACK_OK (stk);
 
     stk->capacity = ((stk->capacity)*2);
 
@@ -97,7 +111,7 @@ int stack_realloc_up(stack* stk) {
     }
 
     //* checking stack validity
-    verification(stk);
+    STACK_OK (stk);
 
     return 0;
 }
@@ -107,7 +121,7 @@ int stack_realloc_up(stack* stk) {
 int stack_realloc_down(stack* stk) {
 
     //* checking stack validity
-    verification(stk);
+    STACK_OK (stk);
 
     void* local_arrow = realloc(stk->buf, ((stk->capacity) / 2) * sizeof(int));
 
@@ -121,12 +135,12 @@ int stack_realloc_down(stack* stk) {
     }
 
     //* checking stack validity
-    verification(stk);
+    STACK_OK (stk);
 
     stk->capacity = ((stk->capacity)/2);
 
     //* checking stack validity
-    verification(stk);
+    STACK_OK (stk);
 
     return 0;
 
@@ -137,7 +151,7 @@ int stack_realloc_down(stack* stk) {
 int stack_push(stack* stk, int element) {
 
     //* checking stack validity
-    verification(stk);
+    STACK_OK (stk);
 
     if (stk->size < stk->capacity) {
 
@@ -153,7 +167,7 @@ int stack_push(stack* stk, int element) {
     }
 
     //* checking stack validity
-    verification(stk);
+    STACK_OK (stk);
 
     return 0;
 
@@ -164,14 +178,15 @@ int stack_push(stack* stk, int element) {
 int stack_pop(stack* stk) {
 
     //* checking stack validity
-    verification(stk);
+    STACK_OK (stk);
 
     if (stk->size == 0) {
         printf("ERROR, STECK IS EMPTY\n");
         return POISON;
     }
 
-    int box = stk->buf[--stk->size];
+    int box = POISON;
+    box = stk->buf[--stk->size];
     stk->buf[stk->size] = POISON;
 
 
@@ -179,7 +194,7 @@ int stack_pop(stack* stk) {
         stack_realloc_down(stk);
 
     //* checking stack validity
-    verification(stk);
+    STACK_OK (stk);
 
     return box;
 
@@ -189,10 +204,11 @@ int stack_pop(stack* stk) {
 
 int stack_dump(stack* stk, FILE* log_txt) {
 
+    fprintf(log_txt, "##################################################\n\n");
     fprintf(log_txt, "START OF PRINTOUT\n\n");
 
     //* checking stack validity
-    verification(stk);
+    STACK_OK (stk);
 
     fprintf(log_txt, "simple_stack (OK) [%x]\n", stk);
     fprintf(log_txt, "{\n\n");
@@ -217,9 +233,10 @@ int stack_dump(stack* stk, FILE* log_txt) {
 
     fprintf(log_txt, "}\n");
     fprintf(log_txt, "END OF PRINTOUT\n");
+    fprintf(log_txt, "##################################################\n\n");
 
     //* checking stack validity
-    verification(stk);
+    STACK_OK (stk);
 
     return 0;
 
@@ -276,14 +293,15 @@ int verification(stack* stk) {
         case 5:
             printf(ErrorNames[FAIL_LEFT_CANARY-1]);
             exit(FAIL_LEFT_CANARY);
+            break;
         case 6:
             printf(ErrorNames[FAIL_RIGHT_CANARY-1]);
             exit(FAIL_RIGHT_CANARY);
+            break;
         default:
             printf("NO ERRORS!!!\n\n");
+            return 0;
     }
-
-    return 0;
 
 }
 
