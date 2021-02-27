@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 
-int stack_construct(stack* stk, int capacity, FILE* log_txt) {
+int stack_construct(stack* stk, int capacity) {
 
     //! temprorary solution
     if ((stk != NULL) && ((stk->buf) != NULL)) {
@@ -12,7 +12,7 @@ int stack_construct(stack* stk, int capacity, FILE* log_txt) {
         verification(stk);
 
         printf("this stack was already construct\n");
-        stack_dump(stk, log_txt);
+        DUMP(stk);
 
         //* checking stack validity
         verification(stk);
@@ -307,7 +307,7 @@ int verification(stack* stk) {
 
 //--------------------------------------------------------------------------------------------
 
-void stack_work (stack* stk, int select_act, int element, int pop, FILE* log_txt) {
+void stack_work (stack* stk, int select_act, int element, int pop) {
     printf("Enter number to select an action.\n\n"); 
 
     printf("0 - Exit.\n\n"); 
@@ -348,14 +348,8 @@ void stack_work (stack* stk, int select_act, int element, int pop, FILE* log_txt
                     break; 
                 } 
             case 3: 
-                if (stack_dump(stk, log_txt) == 0) { 
-                    printf("dump compleated successful; look throught log.txt\n"); 
-                    break; 
-                } 
-                else { 
-                    printf("Error with dump\n"); 
-                    break; 
-                } 
+                DUMP(stk);
+                break;
             case 4: 
                 verification(stk); 
                 break; 

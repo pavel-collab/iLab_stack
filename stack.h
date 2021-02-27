@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #ifndef _STACK_H_
 #define _STACK_H_
@@ -54,7 +55,7 @@ enum Errors {
     FAIL_RIGHT_CANARY
 };
 
-int stack_construct(stack* stk, int Capacity, FILE* log_txt);
+int stack_construct(stack* stk, int Capacity);
 
 int stack_distruct(stack* stk);
 
@@ -72,26 +73,36 @@ int verification(stack* stk);
 
 int stack_control(stack* stk);
 
-void stack_work (stack* stk, int select_act, int element, int pop, FILE* log_txt);
+void stack_work(stack* stk, int select_act, int element, int pop);
 
-//* DEBUG_MODE
+//*--------------------------------------------------------------------
+
 #ifdef DEBUG_MODE
 
-#define STACK_OK \
-    verification(stk); \
-
-#else
-
-    #define STACK_OK
-
-#endif
-
-#ifdef STACK_MODE
-    #define START_WORK(stack_name, select_act, push, pop, file_name) \
-        stack_work(&(stack_name), (select_act), (push), (pop), (file_name));
+    #define STACK_OK \
+        verification(stk); \
         
 #else
-// TODO
-// alternative
+    #define STACK_OK
 #endif
+
+//*--------------------------------------------------------------------
+//?????????????????????????????????????????????????????????????????????
+#define DUMP(stack_name) \
+    FILE* log = fopen("log.txt", "ab"); \
+    stack_dump((stack_name), log); \
+    fclose(log);
+
+//*--------------------------------------------------------------------
+
+#ifdef STACK_MODE
+    #define STACK_WORK(stack_name, select_act, push, pop) \
+        stack_work(&(stack_name), (select_act), (push), (pop));
+        
+#else
+    #define STACK_WORK
+#endif
+
+//*--------------------------------------------------------------------
+
 #endif /* _STACK_H_ */
