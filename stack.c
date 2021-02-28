@@ -247,24 +247,24 @@ int stack_dump(stack* stk, FILE* log_txt) {
 int stack_control(stack* stk) {
 
     if (stk->left_canary != left_canary) 
-        return 5;
+        return FAIL_LEFT_CANARY;
 
     if (stk == NULL)
-        return 1;
+        return STK_IS_NULL;
 
     if (stk->buf == NULL)
-        return 2;
+        return BUF_IS_NULL;
 
     if (stk->size > stk->capacity)
-        return 3;
+        return OUT_OF_CAPACITY;
 
     for (int i = stk->size; i < stk->capacity; i++) {
         if (stk->buf[i] != POISON)
-            return 4; 
+            return EMPTY_CELL_NOT_POISOEND; 
     }
 
     if (stk->right_canary != right_canary)
-        return 6;
+        return FAIL_RIGHT_CANARY;
 
 }
 
@@ -274,27 +274,27 @@ int stack_control(stack* stk) {
 int verification(stack* stk) {
 
     switch (stack_control(stk)) {
-        case 1:
+        case STK_IS_NULL:
             printf(ErrorNames[STK_IS_NULL-1]);
             exit(STK_IS_NULL);
             break;
-        case 2:
+        case BUF_IS_NULL:
             printf(ErrorNames[BUF_IS_NULL-1]);
             exit(BUF_IS_NULL);
             break;
-        case 3:
+        case OUT_OF_CAPACITY:
             printf(ErrorNames[OUT_OF_CAPACITY-1]);
             exit(OUT_OF_CAPACITY);
             break;
-        case 4:
+        case EMPTY_CELL_NOT_POISOEND:
             printf(ErrorNames[EMPTY_CELL_NOT_POISOEND-1]);
             exit(EMPTY_CELL_NOT_POISOEND);
             break;
-        case 5:
+        case FAIL_LEFT_CANARY:
             printf(ErrorNames[FAIL_LEFT_CANARY-1]);
             exit(FAIL_LEFT_CANARY);
             break;
-        case 6:
+        case FAIL_RIGHT_CANARY:
             printf(ErrorNames[FAIL_RIGHT_CANARY-1]);
             exit(FAIL_RIGHT_CANARY);
             break;
@@ -319,7 +319,10 @@ void stack_work (stack* stk, int select_act, int element, int pop) {
     while (1) { 
 
         printf("put number to select an action: "); 
-        scanf("%d", &select_act); 
+        if (scanf("%d", &select_act) != 1) {
+            printf("Error with input data\n");
+            return;
+        } 
 
         switch (select_act) { 
             case 0: 
@@ -330,7 +333,10 @@ void stack_work (stack* stk, int select_act, int element, int pop) {
             case 1: 
             {
                 printf("input the element to stack_push: "); 
-                scanf("%d", &element); 
+                if (scanf("%d", &element) != 1) {
+                    printf("Error with input data\n");
+                    return;
+                }
     
                 if (stack_push(stk, element) == 0) { 
                     printf("push compleated successful.\n"); 

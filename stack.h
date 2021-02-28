@@ -90,6 +90,7 @@ void stack_work(stack* stk, int select_act, int element, int pop);
 
 #define DUMP(stack_name) \
     FILE* log = fopen("log.txt", "ab"); \
+    assert(log != NULL); \
     stack_dump((stack_name), log); \
     fclose(log);
 
