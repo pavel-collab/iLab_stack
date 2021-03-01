@@ -73,8 +73,6 @@ int stack_pop(stack* stk);
 
 int stack_dump(stack* stk);
 
-int verification(stack* stk);
-
 int stack_control(stack* stk);
 
 void stack_work(stack* stk, int select_act, int element, int pop);
@@ -84,7 +82,32 @@ void stack_work(stack* stk, int select_act, int element, int pop);
 #ifdef DEBUG_MODE
 
     #define STACK_OK(stk) \
-        verification(stk); 
+    {\
+        int error_type = stack_control(stk); \
+        FILE* log = fopen("log.txt", "a"); \
+        switch(error_type) { \
+            case STK_IS_NULL : \
+            case BUF_IS_NULL : {\
+                fprintf(log, "error type: %s\n file: %s\n line: %d\n", ErrorNames[error_type - 1], __FILE__, __LINE__); \
+                printf("ERROR!\n information had been writen to the log file\n"); \
+                abort(); \
+            } \
+            case OUT_OF_CAPACITY : \
+            case EMPTY_CELL_NOT_POISOEND : \
+            case FAIL_LEFT_CANARY : \
+            case FAIL_RIGHT_CANARY : \
+            case POISONED_CELL : {\
+                fprintf(log, "error type: %s\n file: %s\n line: %d\n", ErrorNames[error_type - 1], __FILE__, __LINE__); \
+                printf("ERROR!\n information had been writen to the log file\n"); \
+                DUMP(stk); \
+                abort(); \
+            } \
+            default : { \
+                printf("NO ERROR\n"); \
+            } \
+        } \
+        fclose(log); \
+    }
 #else
     #define STACK_OK
 #endif
