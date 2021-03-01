@@ -211,7 +211,7 @@ int stack_dump(stack* stk) {
     fprintf(log_txt, "START OF PRINTOUT\n\n");
 
     //* checking stack validity
-    STACK_OK (stk);
+    //STACK_OK (stk);
 
     fprintf(log_txt, "simple_stack (OK) [%x]\n", stk);
     fprintf(log_txt, "{\n\n");
@@ -241,13 +241,14 @@ int stack_dump(stack* stk) {
     fclose(log_txt);
 
     //* checking stack validity
-    STACK_OK (stk);
+    //STACK_OK (stk);
 
     return 0;
 
 }
 
 //--------------------------------------------------------------------------------------------
+// TODO: попробовать еще раз сделать проверку на отравленную ячейку
 
 int stack_control(stack* stk) {
 
@@ -268,6 +269,12 @@ int stack_control(stack* stk) {
             return EMPTY_CELL_NOT_POISOEND; 
     }
 
+    for (int j = 0; j < stk->size; j++) {
+        if (stk->buf[j] == POISON) {
+            return POISONED_CELL;
+        }
+    }
+
     if (stk->right_canary != right_canary)
         return FAIL_RIGHT_CANARY;
 
@@ -278,51 +285,120 @@ int stack_control(stack* stk) {
 //verification
 int verification(stack* stk) {
 
-    FILE* log = fopen("log.txt", "a");
-    assert(log != NULL);
-
     switch (stack_control(stk)) {
         case STK_IS_NULL: {
-            fprintf(log, "error type: %s; file: %s; line: %d", ErrorNames[STK_IS_NULL-1], __FILE__, __LINE__);
+            FILE* log = fopen("log.txt", "a");
+            assert(log != NULL);
+
+            fprintf(log, "error type: %s\n" 
+                         "file: %s\n" 
+                         "line: %d\n", ErrorNames[POISONED_CELL - 1], __FILE__, __LINE__);
+
+            printf("ERROR!\n"
+                   "information had been writen to the log file\n");
+                   
             fclose(log);
             exit(STK_IS_NULL);
             break;
         }
         case BUF_IS_NULL: {
-            fprintf(log, "error type: %s; file: %s; line: %d", ErrorNames[BUF_IS_NULL-1], __FILE__, __LINE__);
+            FILE* log = fopen("log.txt", "a");
+            assert(log != NULL);
+
+            fprintf(log, "error type: %s\n" 
+                         "file: %s\n" 
+                         "line: %d\n", ErrorNames[POISONED_CELL - 1], __FILE__, __LINE__);
+
+            printf("ERROR!\n"
+                   "information had been writen to the log file\n");
+
             fclose(log);
             exit(BUF_IS_NULL);
             break;
         }
         case OUT_OF_CAPACITY: {
-            fprintf(log, "error type: %s; file: %s; line: %d", ErrorNames[OUT_OF_CAPACITY-1], __FILE__, __LINE__);
+            FILE* log = fopen("log.txt", "a");
+            assert(log != NULL);
+
+            fprintf(log, "error type: %s\n" 
+                         "file: %s\n" 
+                         "line: %d\n", ErrorNames[POISONED_CELL - 1], __FILE__, __LINE__);
+
+            printf("ERROR!\n"
+                   "information had been writen to the log file\n");
+
             fclose(log);
             DUMP(stk);
             exit(OUT_OF_CAPACITY);
             break;
         }
         case EMPTY_CELL_NOT_POISOEND: {
-            fprintf(log, "error type: %s; file: %s; line: %d", ErrorNames[EMPTY_CELL_NOT_POISOEND-1], __FILE__, __LINE__);
+            FILE* log = fopen("log.txt", "a");
+            assert(log != NULL);
+
+            fprintf(log, "error type: %s\n" 
+                         "file: %s\n" 
+                         "line: %d\n", ErrorNames[POISONED_CELL - 1], __FILE__, __LINE__);
+
+            printf("ERROR!\n"
+                   "information had been writen to the log file\n");
+
             fclose(log);
             DUMP(stk);
             exit(EMPTY_CELL_NOT_POISOEND);
             break;
         }
         case FAIL_LEFT_CANARY: {
-            fprintf(log, "error type: %s; file: %s; line: %d", ErrorNames[FAIL_LEFT_CANARY-1], __FILE__, __LINE__);
+            FILE* log = fopen("log.txt", "a");
+            assert(log != NULL);
+
+            fprintf(log, "error type: %s\n" 
+                         "file: %s\n" 
+                         "line: %d\n", ErrorNames[POISONED_CELL - 1], __FILE__, __LINE__);
+
+            printf("ERROR!\n"
+                   "information had been writen to the log file\n");
+
             fclose(log);
             DUMP(stk);
             exit(FAIL_LEFT_CANARY);
             break;
         }
         case FAIL_RIGHT_CANARY:{
-            fprintf(log, "error type: %s; file: %s; line: %d", ErrorNames[FAIL_RIGHT_CANARY-1], __FILE__, __LINE__);
+            FILE* log = fopen("log.txt", "a");
+            assert(log != NULL);
+
+            fprintf(log, "error type: %s\n" 
+                         "file: %s\n" 
+                         "line: %d\n", ErrorNames[POISONED_CELL - 1], __FILE__, __LINE__);
+
+            printf("ERROR!\n"
+                   "information had been writen to the log file\n");
+
             fclose(log);
             DUMP(stk);
             exit(FAIL_RIGHT_CANARY);
             break;
         }
+        case POISONED_CELL:{
+            FILE* log = fopen("log.txt", "a");
+            assert(log != NULL);
+
+            fprintf(log, "error type: %s\n" 
+                         "file: %s\n" 
+                         "line: %d\n", ErrorNames[POISONED_CELL - 1], __FILE__, __LINE__);
+
+            printf("ERROR!\n"
+                   "information had been writen to the log file\n");
+
+            fclose(log);
+            DUMP(stk);
+            exit(POISONED_CELL);
+            break;
+        }
         default: {
+            FILE* log = fopen("log.txt", "a");
+            assert(log != NULL);
             printf("NO ERRORS!!!\n\n");
             fclose(log);
             return 0;

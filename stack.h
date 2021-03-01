@@ -37,13 +37,16 @@ static char *ErrorNames[] = {
     "size > capacity\n",
 
     "ERROR 4\n"
-    "empty cell of memory hadn't be poisoned\n"
+    "empty cell of memory hadn't be poisoned\n",
 
     "ERROR 5\n"
-    "destroided left canary\n"
+    "destroided left canary\n",
 
     "ERROR 5\n"
-    "destroided right canary\n"
+    "destroided right canary\n",
+
+    "ERROR 6\n"
+    "cell with data is poisoned\n"
 };
  
 enum Errors {
@@ -52,7 +55,8 @@ enum Errors {
     OUT_OF_CAPACITY,
     EMPTY_CELL_NOT_POISOEND,
     FAIL_LEFT_CANARY,
-    FAIL_RIGHT_CANARY
+    FAIL_RIGHT_CANARY,
+    POISONED_CELL
 };
 
 int stack_construct(stack* stk, int Capacity);
