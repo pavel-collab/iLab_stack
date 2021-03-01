@@ -67,7 +67,7 @@ int stack_realloc_down(stack* stk);
 
 int stack_pop(stack* stk);
 
-int stack_dump(stack* stk, FILE* log_txt);
+int stack_dump(stack* stk);
 
 int verification(stack* stk);
 
@@ -79,9 +79,8 @@ void stack_work(stack* stk, int select_act, int element, int pop);
 
 #ifdef DEBUG_MODE
 
-    #define STACK_OK \
-        verification(stk); \
-        
+    #define STACK_OK(stk) \
+        verification(stk); 
 #else
     #define STACK_OK
 #endif
@@ -89,10 +88,7 @@ void stack_work(stack* stk, int select_act, int element, int pop);
 //*--------------------------------------------------------------------
 
 #define DUMP(stack_name) \
-    FILE* log = fopen("log.txt", "ab"); \
-    assert(log != NULL); \
-    stack_dump((stack_name), log); \
-    fclose(log);
+    stack_dump((stack_name));
 
 //*--------------------------------------------------------------------
 

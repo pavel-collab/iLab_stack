@@ -9,13 +9,13 @@ int stack_construct(stack* stk, int capacity) {
     if ((stk != NULL) && ((stk->buf) != NULL)) {
 
         //* checking stack validity
-        verification(stk);
+        STACK_OK(stk);
 
         printf("this stack was already construct\n");
         DUMP(stk);
 
         //* checking stack validity
-        verification(stk);
+        STACK_OK(stk);
 
         return 0;
         
@@ -51,7 +51,7 @@ int stack_construct(stack* stk, int capacity) {
     }
 
     //* checking stack validity
-    verification(stk);
+    STACK_OK(stk);
 
     return 0;
 
@@ -202,7 +202,10 @@ int stack_pop(stack* stk) {
 
 //--------------------------------------------------------------------------------------------
 
-int stack_dump(stack* stk, FILE* log_txt) {
+int stack_dump(stack* stk) {
+
+    FILE* log_txt = fopen("log.txt", "a");
+    assert(log_txt != NULL);
 
     fprintf(log_txt, "##################################################\n\n");
     fprintf(log_txt, "START OF PRINTOUT\n\n");
@@ -234,6 +237,8 @@ int stack_dump(stack* stk, FILE* log_txt) {
     fprintf(log_txt, "}\n");
     fprintf(log_txt, "END OF PRINTOUT\n");
     fprintf(log_txt, "##################################################\n\n");
+
+    fclose(log_txt);
 
     //* checking stack validity
     STACK_OK (stk);
@@ -273,34 +278,55 @@ int stack_control(stack* stk) {
 //verification
 int verification(stack* stk) {
 
+    FILE* log = fopen("log.txt", "a");
+    assert(log != NULL);
+
     switch (stack_control(stk)) {
-        case STK_IS_NULL:
-            printf(ErrorNames[STK_IS_NULL-1]);
+        case STK_IS_NULL: {
+            fprintf(log, "error type: %s; file: %s; line: %d", ErrorNames[STK_IS_NULL-1], __FILE__, __LINE__);
+            fclose(log);
             exit(STK_IS_NULL);
             break;
-        case BUF_IS_NULL:
-            printf(ErrorNames[BUF_IS_NULL-1]);
+        }
+        case BUF_IS_NULL: {
+            fprintf(log, "error type: %s; file: %s; line: %d", ErrorNames[BUF_IS_NULL-1], __FILE__, __LINE__);
+            fclose(log);
             exit(BUF_IS_NULL);
             break;
-        case OUT_OF_CAPACITY:
-            printf(ErrorNames[OUT_OF_CAPACITY-1]);
+        }
+        case OUT_OF_CAPACITY: {
+            fprintf(log, "error type: %s; file: %s; line: %d", ErrorNames[OUT_OF_CAPACITY-1], __FILE__, __LINE__);
+            fclose(log);
+            DUMP(stk);
             exit(OUT_OF_CAPACITY);
             break;
-        case EMPTY_CELL_NOT_POISOEND:
-            printf(ErrorNames[EMPTY_CELL_NOT_POISOEND-1]);
+        }
+        case EMPTY_CELL_NOT_POISOEND: {
+            fprintf(log, "error type: %s; file: %s; line: %d", ErrorNames[EMPTY_CELL_NOT_POISOEND-1], __FILE__, __LINE__);
+            fclose(log);
+            DUMP(stk);
             exit(EMPTY_CELL_NOT_POISOEND);
             break;
-        case FAIL_LEFT_CANARY:
-            printf(ErrorNames[FAIL_LEFT_CANARY-1]);
+        }
+        case FAIL_LEFT_CANARY: {
+            fprintf(log, "error type: %s; file: %s; line: %d", ErrorNames[FAIL_LEFT_CANARY-1], __FILE__, __LINE__);
+            fclose(log);
+            DUMP(stk);
             exit(FAIL_LEFT_CANARY);
             break;
-        case FAIL_RIGHT_CANARY:
-            printf(ErrorNames[FAIL_RIGHT_CANARY-1]);
+        }
+        case FAIL_RIGHT_CANARY:{
+            fprintf(log, "error type: %s; file: %s; line: %d", ErrorNames[FAIL_RIGHT_CANARY-1], __FILE__, __LINE__);
+            fclose(log);
+            DUMP(stk);
             exit(FAIL_RIGHT_CANARY);
             break;
-        default:
+        }
+        default: {
             printf("NO ERRORS!!!\n\n");
+            fclose(log);
             return 0;
+        }
     }
 
 }
@@ -366,7 +392,7 @@ void stack_work (stack* stk, int select_act, int element, int pop) {
             }
             case 4:
             { 
-                verification(stk); 
+                STACK_OK(stk); 
                 break;
             } 
             default: 
