@@ -9,13 +9,13 @@ int stack_construct(stack* stk, int capacity) {
     if ((stk != NULL) && ((stk->buf) != NULL)) {
 
         //* checking stack validity
-        verification(stk);
+        STACK_OK(stk);
 
         printf("this stack was already construct\n");
         DUMP(stk);
 
         //* checking stack validity
-        verification(stk);
+        STACK_OK(stk);
 
         return 0;
         
@@ -51,7 +51,7 @@ int stack_construct(stack* stk, int capacity) {
     }
 
     //* checking stack validity
-    verification(stk);
+    STACK_OK(stk);
 
     return 0;
 
@@ -207,8 +207,7 @@ int stack_dump(stack* stk, FILE* log_txt) {
     fprintf(log_txt, "##################################################\n\n");
     fprintf(log_txt, "START OF PRINTOUT\n\n");
 
-    //* checking stack validity
-    STACK_OK (stk);
+    //* пришлось убрать STACK_OK в дампе, так как DUMP вызывается в том числе при нахожении ошибки
 
     fprintf(log_txt, "simple_stack (OK) [%x]\n", stk);
     fprintf(log_txt, "{\n\n");
@@ -235,8 +234,7 @@ int stack_dump(stack* stk, FILE* log_txt) {
     fprintf(log_txt, "END OF PRINTOUT\n");
     fprintf(log_txt, "##################################################\n\n");
 
-    //* checking stack validity
-    STACK_OK (stk);
+    //* пришлось убрать STACK_OK в дампе, так как DUMP вызывается в том числе при нахожении ошибки
 
     return 0;
 
@@ -263,45 +261,16 @@ int stack_control(stack* stk) {
             return EMPTY_CELL_NOT_POISOEND; 
     }
 
+    for (int j = 0; j < stk->size; j++) {
+        if (stk->buf[j] == POISON) {
+            return POISONED_CELL;
+        }
+    }
+
     if (stk->right_canary != right_canary)
         return FAIL_RIGHT_CANARY;
 
-}
-
-//--------------------------------------------------------------------------------------------
-
-//verification
-int verification(stack* stk) {
-
-    switch (stack_control(stk)) {
-        case STK_IS_NULL:
-            printf(ErrorNames[STK_IS_NULL-1]);
-            exit(STK_IS_NULL);
-            break;
-        case BUF_IS_NULL:
-            printf(ErrorNames[BUF_IS_NULL-1]);
-            exit(BUF_IS_NULL);
-            break;
-        case OUT_OF_CAPACITY:
-            printf(ErrorNames[OUT_OF_CAPACITY-1]);
-            exit(OUT_OF_CAPACITY);
-            break;
-        case EMPTY_CELL_NOT_POISOEND:
-            printf(ErrorNames[EMPTY_CELL_NOT_POISOEND-1]);
-            exit(EMPTY_CELL_NOT_POISOEND);
-            break;
-        case FAIL_LEFT_CANARY:
-            printf(ErrorNames[FAIL_LEFT_CANARY-1]);
-            exit(FAIL_LEFT_CANARY);
-            break;
-        case FAIL_RIGHT_CANARY:
-            printf(ErrorNames[FAIL_RIGHT_CANARY-1]);
-            exit(FAIL_RIGHT_CANARY);
-            break;
-        default:
-            printf("NO ERRORS!!!\n\n");
-            return 0;
-    }
+    return 0;
 
 }
 
@@ -361,12 +330,14 @@ void stack_work (stack* stk, int select_act, int element, int pop) {
             }
             case 3: 
             {
+                STACK_OK(stk);
                 DUMP(stk);
+                STACK_OK(stk);
                 break;
             }
             case 4:
             { 
-                verification(stk); 
+                STACK_OK(stk); 
                 break;
             } 
             default: 
