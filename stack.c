@@ -202,16 +202,12 @@ int stack_pop(stack* stk) {
 
 //--------------------------------------------------------------------------------------------
 
-int stack_dump(stack* stk) {
-
-    FILE* log_txt = fopen("log.txt", "a");
-    assert(log_txt != NULL);
+int stack_dump(stack* stk, FILE* log_txt) {
 
     fprintf(log_txt, "##################################################\n\n");
     fprintf(log_txt, "START OF PRINTOUT\n\n");
 
-    //* checking stack validity
-    //STACK_OK (stk);
+    //* пришлось убрать STACK_OK в дампе, так как DUMP вызывается в том числе при нахожении ошибки
 
     fprintf(log_txt, "simple_stack (OK) [%x]\n", stk);
     fprintf(log_txt, "{\n\n");
@@ -238,17 +234,13 @@ int stack_dump(stack* stk) {
     fprintf(log_txt, "END OF PRINTOUT\n");
     fprintf(log_txt, "##################################################\n\n");
 
-    fclose(log_txt);
-
-    //* checking stack validity
-    //STACK_OK (stk);
+    //* пришлось убрать STACK_OK в дампе, так как DUMP вызывается в том числе при нахожении ошибки
 
     return 0;
 
 }
 
 //--------------------------------------------------------------------------------------------
-// TODO: попробовать еще раз сделать проверку на отравленную ячейку
 
 int stack_control(stack* stk) {
 
@@ -338,7 +330,9 @@ void stack_work (stack* stk, int select_act, int element, int pop) {
             }
             case 3: 
             {
+                STACK_OK(stk);
                 DUMP(stk);
+                STACK_OK(stk);
                 break;
             }
             case 4:

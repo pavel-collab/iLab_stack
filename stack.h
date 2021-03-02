@@ -71,7 +71,7 @@ int stack_realloc_down(stack* stk);
 
 int stack_pop(stack* stk);
 
-int stack_dump(stack* stk);
+int stack_dump(stack* stk, FILE* log);
 
 int stack_control(stack* stk);
 
@@ -98,8 +98,8 @@ void stack_work(stack* stk, int select_act, int element, int pop);
             case FAIL_RIGHT_CANARY : \
             case POISONED_CELL : {\
                 fprintf(log, "error type: %s\n file: %s\n line: %d\n", ErrorNames[error_type - 1], __FILE__, __LINE__); \
-                printf("ERROR!\n information had been writen to the log file\n"); \
                 DUMP(stk); \
+                printf("ERROR!\n information had been writen to the log file\n"); \
                 abort(); \
             } \
             default : { \
@@ -114,8 +114,12 @@ void stack_work(stack* stk, int select_act, int element, int pop);
 
 //*--------------------------------------------------------------------
 
-#define DUMP(stack_name) \
-    stack_dump((stack_name));
+#define DUMP(stack_name) {\
+    FILE* log_txt = fopen("log.txt", "a"); \
+    assert(log_txt != NULL); \
+    stack_dump((stack_name), log_txt); \
+    fclose(log_txt);\
+}
 
 //*--------------------------------------------------------------------
 
