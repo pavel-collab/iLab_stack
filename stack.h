@@ -22,6 +22,8 @@ typedef struct _stack {
     int   size;       // count of date in memory
     int   capacity;   // capacity of memory
 
+    unsigned int hash; // hash of all elements
+
     unsigned long long right_canary;
 
 } stack;
@@ -42,11 +44,14 @@ static char *ErrorNames[] = {
     "ERROR 5\n"
     "destroided left canary\n",
 
-    "ERROR 5\n"
+    "ERROR 6\n"
     "destroided right canary\n",
 
-    "ERROR 6\n"
-    "cell with data is poisoned\n"
+    "ERROR 7\n"
+    "cell with data is poisoned\n",
+
+    "ERROR 8\n"
+    "hash of data has been crashed\n"
 };
  
 enum Errors {
@@ -56,7 +61,8 @@ enum Errors {
     EMPTY_CELL_NOT_POISOEND,
     FAIL_LEFT_CANARY,
     FAIL_RIGHT_CANARY,
-    POISONED_CELL
+    POISONED_CELL, 
+    FAILED_HASH
 };
 
 int stack_construct(stack* stk, int Capacity);
@@ -77,6 +83,8 @@ int stack_control(stack* stk);
 
 void stack_work(stack* stk, int select_act, int element, int pop);
 
+unsigned int hash(stack* stk);
+
 //*--------------------------------------------------------------------
 
 #ifdef DEBUG_MODE
@@ -96,6 +104,7 @@ void stack_work(stack* stk, int select_act, int element, int pop);
             case EMPTY_CELL_NOT_POISOEND : \
             case FAIL_LEFT_CANARY : \
             case FAIL_RIGHT_CANARY : \
+            case FAILED_HASH: \
             case POISONED_CELL : {\
                 fprintf(log, "error type: %s\n file: %s\n line: %d\n", ErrorNames[error_type - 1], __FILE__, __LINE__); \
                 DUMP(stk); \

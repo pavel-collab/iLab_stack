@@ -2,20 +2,90 @@
 
 START OF PRINTOUT
 
-simple_stack (OK) [64fdf0]
+stack (OK) [64fde0]
+{
+
+LEFT CANARY (DEADBEEF)
+
+size = 6
+capacity = 10
+buf [9d14c0]
+hash = 897811323
+	{
+	* [0] : 1
+	* [1] : 2
+	* [2] : 3
+	* [3] : 4
+	* [4] : 5
+	* [5] : 6
+	  [6] : -2147483648 ~~ POISON
+	  [7] : -2147483648 ~~ POISON
+	  [8] : -2147483648 ~~ POISON
+	  [9] : -2147483648 ~~ POISON
+	}
+
+RIGHT CANARY (BADDCAFE)
+
+}
+END OF PRINTOUT
+##################################################
+
+##################################################
+
+START OF PRINTOUT
+
+stack (OK) [64fde0]
+{
+
+LEFT CANARY (DEADBEEF)
+
+size = 6
+capacity = 10
+buf [9d14c0]
+hash = 897811323
+	{
+	* [0] : 1
+	* [1] : 2
+	* [2] : 3
+	* [3] : 4
+	* [4] : 5
+	* [5] : 6
+	  [6] : -2147483648 ~~ POISON
+	  [7] : -2147483648 ~~ POISON
+	  [8] : -2147483648 ~~ POISON
+	  [9] : -2147483648 ~~ POISON
+	}
+
+RIGHT CANARY (BADDCAFE)
+
+}
+END OF PRINTOUT
+##################################################
+
+##################################################
+
+START OF PRINTOUT
+
+stack (OK) [64fde0]
 {
 
 LEFT CANARY (DEADBEEF)
 
 size = 4
-capacity = 5
-buf [711440]
+capacity = 10
+buf [9d14c0]
+hash = 10338022
 	{
 	* [0] : 1
-	* [1] : 1
-	* [2] : 1
-	* [3] : 1
+	* [1] : 2
+	* [2] : 3
+	* [3] : 4
 	  [4] : -2147483648 ~~ POISON
+	  [5] : -2147483648 ~~ POISON
+	  [6] : -2147483648 ~~ POISON
+	  [7] : -2147483648 ~~ POISON
+	  [8] : -2147483648 ~~ POISON
+	  [9] : -2147483648 ~~ POISON
 	}
 
 RIGHT CANARY (BADDCAFE)
@@ -24,85 +94,3 @@ RIGHT CANARY (BADDCAFE)
 END OF PRINTOUT
 ##################################################
 
-##################################################
-
-START OF PRINTOUT
-
-simple_stack (OK) [64fdf0]
-{
-
-LEFT CANARY (DEADBEEF)
-
-size = 1
-capacity = 2
-buf [711440]
-	{
-	* [0] : 1
-	  [1] : -2147483648 ~~ POISON
-	}
-
-RIGHT CANARY (BADDCAFE)
-
-}
-END OF PRINTOUT
-##################################################
-
-##################################################
-
-START OF PRINTOUT
-
-simple_stack (OK) [64fdf0]
-{
-
-LEFT CANARY (DEADBEEF)
-
-size = 2
-capacity = 2
-buf [711440]
-	{
-	* [0] : 1
-	* [1] : -2147483648
-	}
-
-RIGHT CANARY (BADDCAFE)
-
-}
-END OF PRINTOUT
-##################################################
-
-error type: ERROR 6
-cell with data is poisoned
-
- file: stack.c
- line: 170
-##################################################
-
-START OF PRINTOUT
-
-simple_stack (OK) [64fdf0]
-{
-
-LEFT CANARY (DEADBEEF)
-
-size = 1
-capacity = 5
-buf [151440]
-	{
-	* [0] : -2147483648
-	  [1] : -2147483648 ~~ POISON
-	  [2] : -2147483648 ~~ POISON
-	  [3] : -2147483648 ~~ POISON
-	  [4] : -2147483648 ~~ POISON
-	}
-
-RIGHT CANARY (BADDCAFE)
-
-}
-END OF PRINTOUT
-##################################################
-
-error type: ERROR 6
-cell with data is poisoned
-
- file: stack.c
- line: 170

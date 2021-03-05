@@ -5,7 +5,6 @@
 
 int stack_construct(stack* stk, int capacity) {
 
-    //! temprorary solution
     if ((stk != NULL) && ((stk->buf) != NULL)) {
 
         //* checking stack validity
@@ -26,6 +25,7 @@ int stack_construct(stack* stk, int capacity) {
         stk->buf = NULL;
         stk->size = 0;
         stk->capacity = 0;
+        stk->hash = 0;
         return 0;
     }
     else
@@ -45,6 +45,7 @@ int stack_construct(stack* stk, int capacity) {
 
     stk->size = 0;
     stk->capacity = capacity;
+    stk->hash = 0;
 
     for (int i = 0; i < capacity; i++) {
         stk->buf[i] = POISON;
@@ -73,6 +74,8 @@ int stack_distruct(stack* stk) {
     free(stk->buf);
     stk->buf = NULL;
 
+    //!
+    free(stk);
     stk = NULL;
 
     printf("SUCCESSFUL STACK REMOVAL\n");
@@ -88,10 +91,10 @@ int stack_realloc_up(stack* stk) {
     //* checking stack validity
     STACK_OK (stk);
 
-    //? create local variabe
+    //* create local variabe
     void* local_arrow = realloc(stk->buf, ((stk->capacity) * 2) * sizeof(int));
 
-    //? if the local return NULL, there is fail --> abort the program
+    //* if the local return NULL, there is fail --> abort the program
     if (local_arrow == NULL) {
         printf("REALLOCATION FAILED!\n\n");
         return 0;
@@ -148,6 +151,33 @@ int stack_realloc_down(stack* stk) {
 
 //--------------------------------------------------------------------------------------------
 
+unsigned int hash(stack* stk) {
+
+    assert(stk != NULL);
+    assert(stk->buf != NULL);
+
+    unsigned char* buf = (unsigned char*) stk->buf;
+    unsigned int hash = 0;
+
+    if (stk->size == 0)
+        return 0;
+
+    for (int i = 0; i < stk->size; i++) {
+        hash += (buf[i]);
+		hash += (hash << 10);
+		hash ^= (hash >> 6); // побитовый XOR в совмещении с присваиванием
+    }
+
+    hash += (hash << 3);
+	hash ^= (hash >> 11);
+	hash += (hash << 15);
+
+    return hash;
+
+}
+
+//--------------------------------------------------------------------------------------------
+
 int stack_push(stack* stk, int element) {
 
     //* checking stack validity
@@ -157,6 +187,7 @@ int stack_push(stack* stk, int element) {
 
         stk->buf[stk->size] = element;
         stk->size++;
+        stk->hash = hash(stk);
     }
     else {
 
@@ -164,6 +195,7 @@ int stack_push(stack* stk, int element) {
 
         stk->buf[stk->size] = element;
         stk->size++;
+        stk->hash = hash(stk);
     }
 
     //* checking stack validity
@@ -193,6 +225,8 @@ int stack_pop(stack* stk) {
     if (stk->capacity >= (stk->size)*4)
         stack_realloc_down(stk);
 
+    stk->hash = hash(stk);
+
     //* checking stack validity
     STACK_OK (stk);
 
@@ -209,7 +243,7 @@ int stack_dump(stack* stk, FILE* log_txt) {
 
     //* пришлось убрать STACK_OK в дампе, так как DUMP вызывается в том числе при нахожении ошибки
 
-    fprintf(log_txt, "simple_stack (OK) [%x]\n", stk);
+    fprintf(log_txt, "stack (OK) [%x]\n", stk);
     fprintf(log_txt, "{\n\n");
 
     fprintf(log_txt, "LEFT CANARY (%X)\n\n", stk->left_canary);
@@ -217,6 +251,7 @@ int stack_dump(stack* stk, FILE* log_txt) {
     fprintf(log_txt, "size = %d\n", stk->size);
     fprintf(log_txt, "capacity = %d\n", stk->capacity);
     fprintf(log_txt, "buf [%x]\n", stk->buf);
+    fprintf(log_txt, "hash = %u\n", stk->hash);
     fprintf(log_txt, "\t{\n");
     for (int i = 0; i < stk->capacity; i++) {
         if (i <= stk->size - 1) {
@@ -265,6 +300,11 @@ int stack_control(stack* stk) {
         if (stk->buf[j] == POISON) {
             return POISONED_CELL;
         }
+    }
+
+    unsigned int data_hash = hash(stk);
+    if (data_hash != stk->hash) {
+        return FAILED_HASH;
     }
 
     if (stk->right_canary != right_canary)
