@@ -6,7 +6,7 @@
 #define _STACK_H_
 
 #define DEBUG_MODE
-#define STACK_MODE
+#define UNIT_TEST
 
 static const int POISON = -2147483648;
 
@@ -132,7 +132,7 @@ unsigned int hash(stack* stk);
 
 //*--------------------------------------------------------------------
 
-#ifdef STACK_MODE
+#ifndef UNIT_TEST
     #define STACK_WORK(stack_name, select_act, push, pop) \
         stack_work(&(stack_name), (select_act), (push), (pop));
         

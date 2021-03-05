@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#include "unit_test.h"
 
 int main() {
 
@@ -23,6 +24,7 @@ int main() {
     int pop = 0;
 
     STACK_WORK(stk, select_act, push, pop);
+    TEST_MODE;
 
     stack_distruct(&stk);
 
