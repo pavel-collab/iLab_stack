@@ -223,9 +223,8 @@ int stack_pop(stack* stk) {
 
     stk->hash = hash(stk);
 
-    if (stk->capacity >= (stk->size)*4)
+    if ((stk->capacity >= (stk->size)*4) && (stk->size != 0))
         stack_realloc_down(stk);
-
 
     //* checking stack validity
     STACK_OK (stk);
@@ -291,9 +290,11 @@ int stack_control(stack* stk) {
     if (stk->size > stk->capacity)
         return OUT_OF_CAPACITY;
 
-    for (int i = stk->size; i < stk->capacity; i++) {
-        if (stk->buf[i] != POISON)
-            return EMPTY_CELL_NOT_POISOEND; 
+    if (stk->size != 0) {
+        for (int i = stk->size; i < stk->capacity; i++) {
+            if (stk->buf[i] != POISON)
+                return EMPTY_CELL_NOT_POISOEND; 
+        }
     }
 
     for (int j = 0; j < stk->size; j++) {
