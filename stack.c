@@ -221,11 +221,11 @@ int stack_pop(stack* stk) {
     box = stk->buf[--stk->size];
     stk->buf[stk->size] = POISON;
 
+    stk->hash = hash(stk);
 
     if (stk->capacity >= (stk->size)*4)
         stack_realloc_down(stk);
 
-    stk->hash = hash(stk);
 
     //* checking stack validity
     STACK_OK (stk);
