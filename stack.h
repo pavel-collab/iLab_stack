@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
+int flag;
+
 #ifndef _STACK_H_
 #define _STACK_H_
 
@@ -90,7 +92,7 @@ unsigned int hash(stack* stk);
 #ifdef DEBUG_MODE
 
     #define STACK_OK(stk) \
-    {\
+    if (flag) {\
         int error_type = stack_control(stk); \
         FILE* log = fopen("log.txt", "a"); \
         switch(error_type) { \

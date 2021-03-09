@@ -11,14 +11,32 @@
 //* 09.03.2021
 // TODO: изменил abort() на exit(-1) (stack.h : 101, 112)
 
-#include "stack.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 
+#include "stack.h"
 #include "unit_test.h"
 
-int main() {
+int main(int argc, char* argv[]) {
+
+    //! разобраться со stack_distruct!!!
+
+    if (argc < 2) {
+        printf("ERROR, expected more arguments!\n");
+        return -1;
+    }
+    else if (!strcmp(argv[1], "protected")) {
+        flag = 1;
+    }
+    else if (!strcmp(argv[1], "no_protected")) {
+        flag = 0;
+    }
+    else {
+        printf("ERROR, expected another arguments!\n");
+        return -1;
+    }
 
     stack stk = {left_canary, NULL, 0, 0, 0, right_canary};
 
