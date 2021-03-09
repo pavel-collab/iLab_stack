@@ -5,7 +5,7 @@
 #ifndef _STACK_H_
 #define _STACK_H_
 
-#define DEBUG_MODE
+
 //#define UNIT_TEST
 
 static const int POISON = -2147483648;
