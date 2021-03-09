@@ -98,7 +98,7 @@ unsigned int hash(stack* stk);
             case BUF_IS_NULL : {\
                 fprintf(log, "error type: %s\n file: %s\n line: %d\n", ErrorNames[error_type - 1], __FILE__, __LINE__); \
                 printf("ERROR!\n information had been writen to the log file\n"); \
-                abort(); \
+                exit(-1); \
             } \
             case OUT_OF_CAPACITY : \
             case EMPTY_CELL_NOT_POISOEND : \
@@ -109,7 +109,7 @@ unsigned int hash(stack* stk);
                 fprintf(log, "error type: %s\n file: %s\n line: %d\n", ErrorNames[error_type - 1], __FILE__, __LINE__); \
                 DUMP(stk); \
                 printf("ERROR!\n information had been writen to the log file\n"); \
-                abort(); \
+                exit(-1); \
             } \
             default : { \
                 printf("NO ERROR\n"); \
