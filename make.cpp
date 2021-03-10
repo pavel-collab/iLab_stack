@@ -11,9 +11,9 @@ int main(int argc, char* argv[]) {
     }
     else if (!strcmp(argv[1], "protected")) {
 
-        system("gcc -c -D DEBUG_MODE stack_f.c");
+        system("gcc -c -D DEBUG_MODE lib.c");
         system("gcc -c main.c\n");
-        system("gcc -o main main.o stack_f.o\n");
+        system("gcc -o main main.o lib.o\n");
         //system("./main");
 
     }
